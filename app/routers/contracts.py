@@ -6,8 +6,9 @@ from huggingface_hub import InferenceClient
 
 router = APIRouter()
 
+HF_TOKEN = os.getenv("HF_TOKEN")
+
 # Hugging Face API Client Initialization
-HF_TOKEN = "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"
 client = InferenceClient(
     model="meta-llama/Meta-Llama-3-8B-Instruct",
     token=HF_TOKEN,
@@ -62,25 +63,13 @@ def generate_solidity_contract(params):
 
     return response
 
-def save_contract(contract_code, params):
-    """Save the generated contract to a file"""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"CarbonCredit_{params['issuer'].replace(' ', '')}_v{timestamp}.sol"
-
-    with open(filename, 'w') as f:
-        f.write(contract_code)
-
-    return filename
-
 @router.post("/generate_contract/")
 async def generate_contract(params: ContractParams):
     try:
         contract_code = generate_solidity_contract(params.dict())
-        filename = save_contract(contract_code, params.dict())
 
         return {
             "message": "Smart Contract Generated Successfully!",
-            "filename": filename,
             "contract_code": contract_code
         }
     except Exception as e:

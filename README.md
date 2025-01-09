@@ -1,6 +1,6 @@
 # EcoContractor Backend
 
-This is the backend for the EcoContractor project, built using FastAPI. Built to support enterprises who want to generate lots of smart contracts on the carbon credit blockchain. Created in submission for Fintech Summit 2025
+Backend for the EcoContractor project, built using FastAPI, and built to support enterprises who want to generate lots of smart contracts on the carbon credit blockchain. Created in submission for Fintech Summit 2025
 
 ## Setup Process
 
@@ -26,7 +26,12 @@ Follow these steps to set up the project:
    pip install -r requirements.txt
    ```
 
-4. **Run the application:**
+4. **Copy environment variables:**
+
+   `cp .env.example .env`
+   Fill in relevant details in `.env` file
+
+5. **Run the application:**
    ```bash
    uvicorn main:app --reload
    ```
