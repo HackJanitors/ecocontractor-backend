@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solidity Code Generator</title>
+    <style>
+      code {
+        display: block;
+        white-space: pre-wrap;
+        background-color: #f4f4f4;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow-x: auto;
+        font-family: monospace;
+      }
+
+      form {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Solidity Code Generator</h1>
+    <form id="contractForm">
+      <label>
+        Issuer:
+        <input type="text" id="issuer" name="issuer" required>
+      </label>
+      <label>
+        Buyer:
+        <input type="text" id="buyer" name="buyer" required>
+      </label>
+      <label>
+        Verifier:
+        <input type="text" id="verifier" name="verifier" required>
+      </label>
+      <fieldset>
+        <legend>Project Metadata</legend>
+        <label>
+          Location:
+          <input type="text" id="location" name="location" required>
+        </label>
+        <label>
+          Project Type:
+          <input type="text" id="type" name="type" required>
+        </label>
+        <label>
+          Certification:
+          <input type="text" id="certification" name="certification" required>
+        </label>
+      </fieldset>
+      <label>
+        Retirement Status:
+        <input type="text" id="retirementStatus" name="retirementStatus" required>
+      </label>
+      <button type="button" onclick="sendPostRequest()">Generate Contract</button>
+    </form>
+
+    <h2>Generated Solidity Code:</h2>
+    <code id="solidityOutput">Your smart contract will appear here</code>
+
+    <script>
+      function sendPostRequest() {
+        // Collect form data
+        const formData = {
+          issuer: document.getElementById('issuer').value,
+          buyer: document.getElementById('buyer').value,
+          verifier: document.getElementById('verifier').value,
+          project_metadata: {
+            location: document.getElementById('location').value,
+            type: document.getElementById('type').value,
+            certification: document.getElementById('certification').value
+          },
+          retirement_status: document.getElementById('retirementStatus').value
+        };
+
+        // Send the POST request
+        fetch('http://127.0.0.1:8000/generate_contract/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch Solidity code');
+            }
+            const solidityOutput = document.getElementById('solidityOutput');
+            solidityOutput.textContent = "Your contract is loading...";
+            return response.json();
+          })
+          .then(data => {
+            const solidityOutput = document.getElementById('solidityOutput');
+            solidityOutput.textContent = data.contract_code; // Display the Solidity code
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            const solidityOutput = document.getElementById('solidityOutput');
+            solidityOutput.textContent = 'Error generating Solidity code: ' + error.message;
+          });
+      }
+    </script>
+  </body>
+
+</html>

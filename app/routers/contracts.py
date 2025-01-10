@@ -6,7 +6,8 @@ from huggingface_hub import InferenceClient
 
 router = APIRouter()
 
-HF_TOKEN = os.getenv("HF_TOKEN")
+# HF_TOKEN = os.getenv("HF_TOKEN")
+HF_TOKEN = "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"
 
 # Hugging Face API Client Initialization
 client = InferenceClient(
