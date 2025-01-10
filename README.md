@@ -33,7 +33,7 @@ Follow these steps to set up the project:
 
 5. **Run the application:**
    ```bash
-   uvicorn main:app --reload
+   uvicorn app.main:app --reload
    ```
 
 ## Project Structure
