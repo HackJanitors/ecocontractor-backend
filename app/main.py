@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
-from routers.contracts import router as contract_router
+from app.routers.contracts import router as contract_router
 
 load_dotenv()
 
