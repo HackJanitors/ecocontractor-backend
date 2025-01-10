@@ -8,15 +8,18 @@ load_dotenv()
 
 app = FastAPI()
 
-app.include_router(contract_router)
+origins = [
+    "http://localhost:3000",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins, or specify your frontend's URL
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"], allow_headers=["*"],
 )
+
+app.include_router(contract_router)
 
 @app.get("/")
 def read_root():

@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from datetime import datetime
 import os
+import logging
 from huggingface_hub import InferenceClient
 
 router = APIRouter()
@@ -15,23 +16,28 @@ client = InferenceClient(
     token=HF_TOKEN,
 )
 
+LOG = logging.getLogger(__name__)
+
+
 class ContractParams(BaseModel):
     issuer: str
     buyer: str
     verifier: str
-    project_metadata: dict
+    project_type: str
+    location: str
+    certification: str
     retirement_status: str
 
 def generate_solidity_contract(params):
-    """Generate a Solidity smart contract based on user parameters"""
+    """Generate a Solidity smart contract based on user parameters"""    
     prompt = f"""
     Generate a complete Solidity smart contract for carbon credits with the following parameters:
     Issuer: {params['issuer']}
     Buyer: {params['buyer']}
     Verifier: {params['verifier']}
-    Location: {params['project_metadata']['location']}
-    Project Type: {params['project_metadata']['type']}
-    Certification Body: {params['project_metadata']['certification']}
+    Location: {params['location']}
+    Project Type: {params['project_type']}
+    Certification Body: {params['certification']}
     Retirement Status: {params['retirement_status']}
 
     The contract should include:
@@ -58,7 +64,7 @@ def generate_solidity_contract(params):
     response = client.text_generation(
         prompt,
         max_new_tokens=1500,
-        temperature=0.2,  # Lower temperature for more consistent output
+        temperature=0.5,  # Lower temperature for more consistent output
         do_sample=True
     )
 
